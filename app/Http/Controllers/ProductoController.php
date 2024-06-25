@@ -29,14 +29,27 @@ class ProductoController extends Controller
             'Nom_producto' => 'required|string|max:255',
             'Precio_producto' => 'required|numeric',
             'Cantida_producto' => 'required|integer',
-            'Img_producto' => 'required|string|max:255',
+            'Img_producto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validación para la imagen
             'Stock_producto' => 'required|integer',
             'Desc_producto' => 'required|string|max:255',
             'Estado_producto' => 'required|string|max:50'
         ]);
 
-        Producto::create($request->all());
-        return redirect()->route('productos.index');
+        // Procesamiento de la imagen si se proporciona
+        if ($request->hasFile('Img_producto')) {
+            $image = $request->file('Img_producto');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('images/productos'), $imageName); // Guardar la imagen en la carpeta public/images/productos
+
+            $imgPath = 'images/productos/' . $imageName; // Ruta de la imagen para guardar en la base de datos
+        } else {
+            $imgPath = null;
+        }
+
+        // Crear el producto en la base de datos
+        Producto::create(array_merge($request->all(), ['Img_producto' => $imgPath]));
+
+        return redirect()->route('productos.index')->with('success', 'Producto creado correctamente.');
     }
 
     public function edit(Producto $producto) {
@@ -44,21 +57,34 @@ class ProductoController extends Controller
         return view('productos.edit', compact('producto', 'categorias'));
     }
 
-    public function update(Request $request, Producto $producto) { 
+    public function update(Request $request, Producto $producto) {
         $request->validate([
             'ID_categorias' => 'required|exists:categorias,ID_categorias',
             'Cod_Barra_producto' => 'required|string|max:255',
             'Nom_producto' => 'required|string|max:255',
             'Precio_producto' => 'required|numeric',
             'Cantida_producto' => 'required|integer',
-            'Img_producto' => 'required|string|max:255',
+            'Img_producto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validación para la imagen
             'Stock_producto' => 'required|integer',
             'Desc_producto' => 'required|string|max:255',
             'Estado_producto' => 'required|string|max:50'
         ]);
 
-        $producto->update($request->all());
-        return redirect()->route('productos.index');
+        // Procesamiento de la imagen si se proporciona
+        if ($request->hasFile('Img_producto')) {
+            $image = $request->file('Img_producto');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('images/productos'), $imageName); // Guardar la imagen en la carpeta public/images/productos
+
+            $imgPath = 'images/productos/' . $imageName; // Ruta de la imagen para guardar en la base de datos
+        } else {
+            $imgPath = $producto->Img_producto; // Mantener la imagen actual si no se proporciona una nueva
+        }
+
+        // Actualizar el producto en la base de datos
+        $producto->update(array_merge($request->all(), ['Img_producto' => $imgPath]));
+
+        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
     }
 
     public function destroy(Producto $producto)
@@ -82,6 +108,5 @@ class ProductoController extends Controller
             return redirect()->route('productos.index')->with('error', 'Ocurrió un error al intentar eliminar el producto.');
         }
     }
-
 }
 

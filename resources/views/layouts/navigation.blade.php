@@ -32,12 +32,26 @@
                     <x-nav-link :href="route('ingresos.index')" :active="request()->routeIs('ingresos.*')">
                         {{ __('Ingresos') }}
                     </x-nav-link>
-                    <!-- Ingresos -->
+                    <!-- Usuarios -->
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                         {{ __('Usuarios') }}
                     </x-nav-link>
-                    
-                    
+                    <!-- Producto -->
+                    <x-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
+                        {{ __('Productos') }}
+                    </x-nav-link>
+                    <!-- Detalle ingreso -->
+                    <x-nav-link :href="route('detalle_ingreso.index')" :active="request()->routeIs('detalle_ingreso.*')">
+                        {{ __('Detalle de ingreso') }}
+                    </x-nav-link>
+                    <!-- Ventas -->
+                    <x-nav-link :href="route('ventas.index')" :active="request()->routeIs('ventas.*')">
+                        {{ __('Ventas') }}
+                    </x-nav-link>  
+                    <!-- detalle_ventas -->
+                    <x-nav-link :href="route('detalle_ventas.index')" :active="request()->routeIs('detalle_ventas.*')">
+                        {{ __('detalle_ventas') }}
+                    </x-nav-link> 
                 </div>
             </div>
 

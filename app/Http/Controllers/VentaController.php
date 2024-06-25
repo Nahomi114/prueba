@@ -5,15 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Venta;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use BadMethodCallException;
+use Carbon\Carbon;
 
 class VentaController extends Controller
 {
     public function index()
     {
-        $ventas = Venta::paginate(10);
+        $ventas = Venta::with('cliente', 'usuario')->paginate(10);
+
+        foreach ($ventas as $venta) {
+            $venta->fecha_venta = Carbon::parse($venta->fecha_venta);
+        }
+
         return view('ventas.index', compact('ventas'));
     }
 
@@ -86,4 +91,5 @@ class VentaController extends Controller
     }
 
 }
+
 

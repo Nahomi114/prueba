@@ -1,55 +1,67 @@
 <!-- resources/views/ingresos/index.blade.php -->
+
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Lista de Ingresos</h1>
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    @if (isset($header))
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                {{ $header }}
+            </div>
+        </header>
     @endif
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Proveedor</th>
-                <th>Usuario</th>
-                <th>Tipo Comprobante</th>
-                <th>Serie</th>
-                <th>Número</th>
-                <th>Fecha</th>
-                <th>Impuesto</th>
-                <th>Total</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($ingresos as $ingreso)
-                <tr>
-                    <td>{{ $ingreso->id }}</td>
-                    <td>{{ $ingreso->proveedor ? $ingreso->proveedor->nombre : 'N/A' }}</td>
-                    <td>{{ $ingreso->user ? $ingreso->user->name : 'N/A' }}</td>
-                    <td>{{ $ingreso->tipo_comprob }}</td>
-                    <td>{{ $ingreso->serie_comprob }}</td>
-                    <td>{{ $ingreso->num_comprob }}</td>
-                    <td>{{ $ingreso->fec_ingreso }}</td>
-                    <td>{{ $ingreso->impuesto }}</td>
-                    <td>{{ $ingreso->total }}</td>
-                    <td>
-                        <a href="{{ route('ingresos.edit', ['ingreso' => $ingreso->id]) }}" class="btn btn-primary">Editar</a>
-                        <form action="{{ route('ingresos.destroy', ['ingreso' => $ingreso->id]) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    {{ $ingresos->links() }}
-</div>
-@endsection
 
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white border-b border-gray-200">
+                <a href="{{ route('ingresos.create') }}" class="btn btn-primary mb-3">Crear Nuevo Ingreso</a>
+
+                <table class="table-auto min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proveedor</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo Comprobante</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serie</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Impuesto</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach ($ingresos as $ingreso)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->ID_ingreso }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->proveedor ? $ingreso->proveedor->nombre : 'N/A' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->user ? $ingreso->user->name : 'N/A' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->tipo_comprob }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->serie_comprob }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->num_comprob }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->fec_ingreso }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->impuesto }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $ingreso->total }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a href="{{ route('ingresos.edit', $ingreso) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                                
+                                <form action="{{ route('ingresos.destroy', $ingreso) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Está seguro de eliminar este ingreso?')">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+                <div class="mt-4">
+                    {{ $ingresos->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

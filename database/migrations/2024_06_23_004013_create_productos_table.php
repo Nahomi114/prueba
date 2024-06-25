@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('Nom_producto');
             $table->double('Precio_producto');
             $table->integer('Cantida_producto');
-            $table->string('Img_producto');
+            $table->string('Img_producto')->nullable();
             $table->integer('Stock_producto');
             $table->string('Desc_producto');
             $table->string('Estado_producto');
